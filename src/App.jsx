@@ -5,6 +5,7 @@ import Header from './components/Header'
 import Home from './components/Home'
 import Jobs from './components/Jobs'
 import PostJob from './components/PostJob'
+import JobApplicantDetails from './components/JobApplicantDetails'
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/post-job" element={<PostJob />} />
+          <Route path="/jobs/:id" element={<JobApplicantDetails />} />
+
 
         </Routes>
       </main>
