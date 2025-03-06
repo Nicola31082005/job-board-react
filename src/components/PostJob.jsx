@@ -27,18 +27,26 @@ export default function PostJob() {
             return;
         }
 
-        console.log(formData.name, formData.email, formData.letter);
+        const bodyData = { first_name: formData.name, last_name: formData.email }
 
 
         setFormError("");
         setIsSubmitting(true);
 
         // Simulate a successful submission
-        setTimeout(() => {
-            setIsSubmitting(false);
-            alert("Your application has been submitted!");
-            navigate("/jobs"); // Redirect to jobs page after submitting
-        }, 1500);
+        fetch('https://reqres.in/api/users', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(bodyData)
+        })
+            .then((response) => {
+                setIsSubmitting(false)
+                navigate('/jobs')
+                return response.json()
+            })
+
     };
 
     return (

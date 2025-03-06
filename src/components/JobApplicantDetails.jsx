@@ -13,11 +13,6 @@ export default function JobApplicantDetails() {
             .then((data) => setApplicant(data.data))
     }, [])
 
-
-    console.log(applicant);
-
-
-
     return (
         <div className="max-w-3xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg">
             <h1 className="text-3xl font-bold text-gray-800 mb-4">Applicant Details</h1>
