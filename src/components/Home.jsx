@@ -1,7 +1,16 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router";
 
 
 export default function Home() {
+
+    let navigate = useNavigate()
+
+
+    const browseJobsClickHandler = () => {
+        navigate('/jobs')
+    }
+
     return (
 
         <section className="relative w-full h-screen flex flex-col items-center justify-center text-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6">
@@ -30,7 +39,7 @@ export default function Home() {
 
                 {/* CTA Buttons */}
                 <div className="mt-6 flex justify-center gap-4">
-                    <button className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-full shadow-md hover:bg-gray-200 transition">
+                    <button onClick={browseJobsClickHandler} className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-full shadow-md hover:bg-gray-200 transition">
                         Browse Jobs
                     </button>
                     <button className="px-6 py-3 bg-blue-700 text-white font-semibold rounded-full shadow-md hover:bg-blue-800 transition">
