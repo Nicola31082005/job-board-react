@@ -1,6 +1,8 @@
+import { Link } from "react-router";
+
 export default function Footer() {
     return (
-        <footer className="bg-gray-900 text-gray-300 py-8 mt-16">
+        <footer className="bg-gray-900 text-gray-300 py-8 ">
             <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
                 {/* Logo & Copyright */}
                 <div className="text-center md:text-left">
@@ -9,7 +11,7 @@ export default function Footer() {
                 </div>
 
                 {/* Footer Links */}
-                {/* <div className="flex space-x-6 mt-4 md:mt-0">
+                <div className="flex space-x-6 mt-4 md:mt-0">
                     <Link to="/about" className="hover:text-white">
                         About
                     </Link>
@@ -22,7 +24,7 @@ export default function Footer() {
                     <Link to="/terms" className="hover:text-white">
                         Terms of Use
                     </Link>
-                </div> */}
+                </div>
             </div>
         </footer>
     );
