@@ -1,12 +1,14 @@
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
 
-
-
+    const isActivePath = (path) => {
+        return location.pathname === path ? "text-blue-600 font-semibold" : "text-gray-700";
+    };
 
     return (
         <header className="bg-white shadow-md fixed top-0 w-full z-50 ">
@@ -18,16 +20,28 @@ export default function Header() {
 
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex space-x-6">
-                    <Link to="/" className="text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/"
+                        className={`${isActivePath('/')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         Home
                     </Link>
-                    <Link to="/jobs" className="text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/jobs"
+                        className={`${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         Jobs
                     </Link>
-                    <Link to="/about" className="text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/about"
+                        className={`${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         About
                     </Link>
-                    <Link to="/contact" className="text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/contact"
+                        className={`${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         Contact
                     </Link>
                 </nav>
@@ -35,7 +49,7 @@ export default function Header() {
                 {/* Post a Job Button */}
                 <Link
                     to="/post-job"
-                    className="hidden md:block px-5 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700"
+                    className="hidden md:block px-5 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-200"
                 >
                     Apply for a job
                 </Link>
@@ -52,21 +66,33 @@ export default function Header() {
             {/* Mobile Dropdown Menu */}
             {isOpen && (
                 <nav className="md:hidden bg-white border-t p-4">
-                    <Link to="/" className="block py-2 text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/"
+                        className={`block py-2 ${isActivePath('/')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         Home
                     </Link>
-                    <Link to="/jobs" className="block py-2 text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/jobs"
+                        className={`block py-2 ${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         Jobs
                     </Link>
-                    <Link to="/about" className="block py-2 text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/about"
+                        className={`block py-2 ${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         About
                     </Link>
-                    <Link to="/contact" className="block py-2 text-gray-700 hover:text-blue-600">
+                    <Link
+                        to="/contact"
+                        className={`block py-2 ${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200`}
+                    >
                         Contact
                     </Link>
                     <Link
                         to="/post-job"
-                        className="block mt-4 px-5 py-2 bg-blue-600 text-white font-semibold text-center rounded-full hover:bg-blue-700"
+                        className="block mt-4 px-5 py-2 bg-blue-600 text-white font-semibold text-center rounded-full hover:bg-blue-700 transition-colors duration-200"
                     >
                         Post a Job
                     </Link>
