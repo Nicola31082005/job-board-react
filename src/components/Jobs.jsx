@@ -7,36 +7,46 @@ export default function Jobs() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        let ignore = false;
-
-        async function fetchJobs() {
+        const fetchJobs = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
-                const response = await fetch('https://reqres.in/api/users');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch jobs');
-                }
-                const data = await response.json();
 
-                if (!ignore) {
+                // Get local applicants
+                const localApplicants = JSON.parse(localStorage.getItem('jobApplicants') || '[]');
+
+                // If we don't have any local applicants, fetch initial data from API
+                if (localApplicants.length === 0) {
+                    const response = await fetch('https://reqres.in/api/users');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch jobs');
+                    }
+                    const data = await response.json();
                     setJobs(data.data);
+                    // Store initial data in localStorage
+                    localStorage.setItem('jobApplicants', JSON.stringify(data.data));
+                } else {
+                    // Use local applicants
+                    setJobs(localApplicants);
                 }
             } catch (err) {
-                if (!ignore) {
-                    setError(err.message);
-                }
+                setError(err.message);
             } finally {
-                if (!ignore) {
-                    setIsLoading(false);
-                }
+                setIsLoading(false);
             }
-        }
+        };
 
         fetchJobs();
 
+        // Set up localStorage change listener
+        const handleStorageChange = () => {
+            const updatedApplicants = JSON.parse(localStorage.getItem('jobApplicants') || '[]');
+            setJobs(updatedApplicants);
+        };
+
+        window.addEventListener('storage', handleStorageChange);
         return () => {
-            ignore = true;
+            window.removeEventListener('storage', handleStorageChange);
         };
     }, []);
 

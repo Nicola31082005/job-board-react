@@ -9,7 +9,7 @@ export default function PostJob() {
     })
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formError, setFormError] = useState("");
-    const navigate = useNavigate(); // Used to navigate after form submission
+    const navigate = useNavigate();
 
     const handleFormData = (e) => {
         const currentValue = e.target.value;
@@ -22,31 +22,38 @@ export default function PostJob() {
         e.preventDefault();
 
         // Basic validation
-        if (!formData.name || !formData.email || !formData.letter) {
+        if (!formData.name || !formData.email || !formData.coverLetter) {
             setFormError("Please fill in all fields.");
             return;
         }
 
-        const bodyData = { first_name: formData.name, last_name: formData.email }
-
-
         setFormError("");
         setIsSubmitting(true);
 
-        // Simulate a successful submission
-        fetch('https://reqres.in/api/users', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(bodyData)
-        })
-            .then((response) => {
-                setIsSubmitting(false)
-                navigate('/jobs')
-                return response.json()
-            })
+        // Create a new job applicant object
+        const newApplicant = {
+            id: Date.now(), // Generate a unique ID
+            first_name: formData.name.split(' ')[0],
+            last_name: formData.name.split(' ')[1] || '',
+            email: formData.email,
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
+            coverLetter: formData.coverLetter
+        };
 
+        // Get existing applicants from localStorage
+        const existingApplicants = JSON.parse(localStorage.getItem('jobApplicants') || '[]');
+
+        // Add new applicant
+        const updatedApplicants = [...existingApplicants, newApplicant];
+
+        // Save to localStorage
+        localStorage.setItem('jobApplicants', JSON.stringify(updatedApplicants));
+
+        // Simulate API delay
+        setTimeout(() => {
+            setIsSubmitting(false);
+            navigate('/jobs');
+        }, 1000);
     };
 
     return (
@@ -55,13 +62,13 @@ export default function PostJob() {
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name */}
                 <div>
-                    <label htmlFor="name" className="block text-gray-700">Name</label>
+                    <label htmlFor="name" className="block text-gray-700">Full Name</label>
                     <input
                         type="text"
                         id="name"
                         value={formData.name}
                         name="name"
-                        onChange={(e) => handleFormData(e)}
+                        onChange={handleFormData}
                         className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Your full name"
                         required
@@ -76,7 +83,7 @@ export default function PostJob() {
                         id="email"
                         value={formData.email}
                         name="email"
-                        onChange={(e) => handleFormData(e)}
+                        onChange={handleFormData}
                         className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Your email"
                         required
@@ -88,9 +95,9 @@ export default function PostJob() {
                     <label htmlFor="coverLetter" className="block text-gray-700">Cover Letter</label>
                     <textarea
                         id="coverLetter"
-                        value={formData.letter}
-                        name="letter"
-                        onChange={(e) => handleFormData(e)}
+                        value={formData.coverLetter}
+                        name="coverLetter"
+                        onChange={handleFormData}
                         className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Write your cover letter"
                         rows="6"
@@ -99,14 +106,16 @@ export default function PostJob() {
                 </div>
 
                 {/* Form Error */}
-                {formError && <p className="text-red-500">{formError}</p>}
+                {formError && (
+                    <p className="text-red-500 bg-red-50 p-3 rounded-lg">{formError}</p>
+                )}
 
                 {/* Submit Button */}
                 <div>
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+                        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors duration-200"
                     >
                         {isSubmitting ? "Submitting..." : "Submit Application"}
                     </button>
