@@ -4,14 +4,20 @@ import { Link, useParams } from "react-router";
 export default function JobApplicantDetails() {
 
     const params = useParams()
+    const userId = Number(params.id)
 
     const [applicant, setApplicant] = useState({})
 
+
+    // Getting the applicant details from the local storage
     useEffect(() => {
-        fetch(`https://reqres.in/api/users/${params.id}`)
-            .then((response) => response.json())
-            .then((data) => setApplicant(data.data))
-    }, [])
+        const localApplicants = JSON.parse(localStorage.getItem('jobApplicants') || '[]');
+        // console.log(localApplicants);
+
+        const applicant = localApplicants.find(applicant => applicant.id === userId);
+        setApplicant(applicant)
+    }, [params.id])
+
 
     return (
         <div className="max-w-3xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg">

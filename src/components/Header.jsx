@@ -30,7 +30,7 @@ export default function Header() {
                         to="/jobs"
                         className={`${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200`}
                     >
-                        Jobs
+                        Applicants
                     </Link>
                     <Link
                         to="/about"
