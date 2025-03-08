@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import JobApplicantListItem from "./JobApplicantListItem";
+import { JobApplicantListItem } from "../components/common";
 
 export default function Jobs() {
     const [jobs, setJobs] = useState([]);
