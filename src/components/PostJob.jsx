@@ -115,7 +115,8 @@ export default function PostJob() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors duration-200"
+                        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 cursor-pointer"
+
                     >
                         {isSubmitting ? "Submitting..." : "Submit Application"}
                     </button>

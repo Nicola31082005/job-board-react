@@ -9,7 +9,7 @@ export default function JobApplicantListItem({
 
 }) {
     return (
-        <div key={id} className="bg-white p-6 shadow-md rounded-lg">
+        <Link to={`/jobs/${id}`} key={id} className="bg-white p-6 shadow-md rounded-lg cursor-pointer">
             <h3 className="text-xl font-semibold text-blue-600">{email}</h3>
             <p className="text-gray-700">{first_name}</p>
             <p className="text-gray-500">{last_name}</p>
@@ -17,11 +17,11 @@ export default function JobApplicantListItem({
             <div className="mt-4">
                 <Link
                     to={`/jobs/${id}`}
-                    className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
                 >
                     View Details
                 </Link>
             </div>
-        </div>
+        </Link>
     );
 }

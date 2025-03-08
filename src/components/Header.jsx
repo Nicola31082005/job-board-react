@@ -11,10 +11,10 @@ export default function Header() {
     };
 
     return (
-        <header className="bg-white shadow-md fixed top-0 w-full z-50 ">
+        <header className="bg-white shadow-md fixed top-0 w-full z-50">
             <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                 {/* Logo */}
-                <Link to="/" className="text-2xl font-bold text-blue-600">
+                <Link to="/" className="text-2xl font-bold text-blue-600 cursor-pointer">
                     JobFinder
                 </Link>
 
@@ -22,25 +22,25 @@ export default function Header() {
                 <nav className="hidden md:flex space-x-6">
                     <Link
                         to="/"
-                        className={`${isActivePath('/')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`${isActivePath('/')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         Home
                     </Link>
                     <Link
                         to="/jobs"
-                        className={`${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         Applicants
                     </Link>
                     <Link
                         to="/about"
-                        className={`${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         About
                     </Link>
                     <Link
                         to="/contact"
-                        className={`${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         Contact
                     </Link>
@@ -49,14 +49,14 @@ export default function Header() {
                 {/* Post a Job Button */}
                 <Link
                     to="/post-job"
-                    className="hidden md:block px-5 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-200"
+                    className="hidden md:block px-5 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
                 >
                     Apply for a job
                 </Link>
 
                 {/* Mobile Menu Button */}
                 <button
-                    className="md:hidden text-gray-700"
+                    className="md:hidden text-gray-700 cursor-pointer hover:text-blue-600 transition-colors duration-200"
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {isOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
@@ -68,31 +68,31 @@ export default function Header() {
                 <nav className="md:hidden bg-white border-t p-4">
                     <Link
                         to="/"
-                        className={`block py-2 ${isActivePath('/')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`block py-2 ${isActivePath('/')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         Home
                     </Link>
                     <Link
                         to="/jobs"
-                        className={`block py-2 ${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`block py-2 ${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         Jobs
                     </Link>
                     <Link
                         to="/about"
-                        className={`block py-2 ${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`block py-2 ${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         About
                     </Link>
                     <Link
                         to="/contact"
-                        className={`block py-2 ${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200`}
+                        className={`block py-2 ${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
                     >
                         Contact
                     </Link>
                     <Link
                         to="/post-job"
-                        className="block mt-4 px-5 py-2 bg-blue-600 text-white font-semibold text-center rounded-full hover:bg-blue-700 transition-colors duration-200"
+                        className="block mt-4 px-5 py-2 bg-blue-600 text-white font-semibold text-center rounded-full hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
                     >
                         Post a Job
                     </Link>
