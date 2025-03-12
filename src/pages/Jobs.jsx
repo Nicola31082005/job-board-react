@@ -52,14 +52,10 @@ export default function Jobs() {
 
     if (isLoading) {
         return (
-            <div className="max-w-7xl mx-auto px-6 py-22">
-                <div className="animate-pulse">
-                    <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {[...Array(6)].map((_, index) => (
-                            <div key={index} className="bg-gray-200 h-48 rounded"></div>
-                        ))}
-                    </div>
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="relative">
+                    <div className="w-16 h-16 border-4 border-blue-500 border-solid rounded-full animate-spin border-t-transparent"></div>
+                    <p className="text-gray-700 text-lg mt-4 text-center">Loading jobs...</p>
                 </div>
             </div>
         );
