@@ -6,9 +6,15 @@ export default function Jobs() {
     const [jobs, setJobs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [shouldFetch, setShouldFetch] = useState(false);
+
+
+    const [data, pending, fetchError] = useFetch(
+        shouldFetch ? 'https://reqres.in/api/users' : null
+    );
 
     useEffect(() => {
-        const fetchJobs = async () => {
+        const initializeJobs = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
@@ -16,26 +22,19 @@ export default function Jobs() {
                 // Get local applicants
                 const localApplicants = JSON.parse(localStorage.getItem('jobApplicants') || '[]');
 
-                // If we don't have any local applicants, fetch initial data from API
-                if (localApplicants.length === 0) {
-                    // get data from custom fetch hook
-                    const [data, pending] = useFetch('https://reqres.in/api/users')
-
-                    setJobs(data.data);
-                    // Store initial data in localStorage
-                    localStorage.setItem('jobApplicants', JSON.stringify(data.data));
-                } else {
-                    // Use local applicants
+                if (localApplicants.length > 0) {
                     setJobs(localApplicants);
+                    setIsLoading(false); // Stop loading if local data exists
+                } else {
+                    setShouldFetch(true); // Trigger fetch if no local data
                 }
             } catch (err) {
                 setError(err.message);
-            } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchJobs();
+        initializeJobs();
 
         // Set up localStorage change listener
         const handleStorageChange = () => {
@@ -49,7 +48,24 @@ export default function Jobs() {
         };
     }, []);
 
-    if (isLoading) {
+    useEffect(() => {
+        if (data && shouldFetch) {
+            setJobs(data.data);
+            localStorage.setItem('jobApplicants', JSON.stringify(data.data));
+            setIsLoading(false);
+            setShouldFetch(false);
+        }
+    }, [data, shouldFetch]);
+
+    useEffect(() => {
+        if (fetchError) {
+            setError(fetchError.message);
+            setIsLoading(false);
+        }
+    }, [fetchError]);
+
+
+    if (isLoading || pending) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="relative">
@@ -83,7 +99,6 @@ export default function Jobs() {
     return (
         <div className="max-w-7xl mx-auto px-6 py-22">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Job Applicants</h2>
-
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {jobs.map((job) => (
                     <JobApplicantListItem
