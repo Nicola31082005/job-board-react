@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { JobApplicantListItem } from "../components/common";
+import { useFetch } from "../hooks/useFetch";
 
 export default function Jobs() {
     const [jobs, setJobs] = useState([]);
@@ -17,11 +18,9 @@ export default function Jobs() {
 
                 // If we don't have any local applicants, fetch initial data from API
                 if (localApplicants.length === 0) {
-                    const response = await fetch('https://reqres.in/api/users');
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch jobs');
-                    }
-                    const data = await response.json();
+                    // get data from custom fetch hook
+                    const [data, pending] = useFetch('https://reqres.in/api/users')
+
                     setJobs(data.data);
                     // Store initial data in localStorage
                     localStorage.setItem('jobApplicants', JSON.stringify(data.data));
