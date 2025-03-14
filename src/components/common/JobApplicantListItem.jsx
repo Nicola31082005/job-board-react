@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import React from "react";
 
 export default function JobApplicantListItem({
     id,
@@ -9,7 +10,7 @@ export default function JobApplicantListItem({
 
 }) {
     return (
-        <Link to={`/jobs/${id}`} key={id} className="bg-white p-6 shadow-md rounded-lg cursor-pointer">
+        <Link to={`/jobs/${id}`} key={id} data-testid={`job-applicant-list-item`} className="bg-white p-6 shadow-md rounded-lg cursor-pointer">
             <h3 className="text-xl font-semibold text-blue-600">{email}</h3>
             <p className="text-gray-700">{first_name}</p>
             <p className="text-gray-500">{last_name}</p>
