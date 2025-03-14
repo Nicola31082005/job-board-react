@@ -1,34 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";  // You can use this to navigate after submission
+import useForm from "../hooks/useForm";
 
 export default function PostJob() {
-    const [formData, setFormData] = useState({
+
+    const initialFormData = {
         name: '',
         email: '',
         coverLetter: '',
-    })
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [formError, setFormError] = useState("");
-    const navigate = useNavigate();
-
-    const handleFormData = (e) => {
-        const currentValue = e.target.value;
-        const currentKey = e.target.name;
-
-        setFormData((prevFormData) => ({ ...prevFormData, [currentKey]: currentValue }));
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const navigate = useNavigate();
 
-        // Basic validation
+
+    // Use useForm custom hook to handle form data
+    const [formData, onChange, onSubmit, isSubmitting, formError, setFormError] = useForm(initialFormData, handleSubmit, validateForm)
+
+
+    function validateForm(formData) {
         if (!formData.name || !formData.email || !formData.coverLetter) {
-            setFormError("Please fill in all fields.");
-            return;
+            return "Please fill in all fields.";
         }
+    }
 
-        setFormError("");
-        setIsSubmitting(true);
+    function handleSubmit() {
+        return new Promise((resolve) => {
 
         // Create a new job applicant object
         const newApplicant = {
@@ -51,15 +47,16 @@ export default function PostJob() {
 
         // Simulate API delay
         setTimeout(() => {
-            setIsSubmitting(false);
             navigate('/jobs');
-        }, 1000);
+                resolve();
+            }, 1000);
+        });
     };
 
     return (
         <div className="max-w-3xl mx-auto px-6 py-12">
             <h2 className="text-3xl font-bold text-blue-600 mb-6">Apply for the Job</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={onSubmit} className="space-y-6">
                 {/* Name */}
                 <div>
                     <label htmlFor="name" className="block text-gray-700">Full Name</label>
@@ -68,10 +65,9 @@ export default function PostJob() {
                         id="name"
                         value={formData.name}
                         name="name"
-                        onChange={handleFormData}
+                        onChange={onChange}
                         className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Your full name"
-                        required
                     />
                 </div>
 
@@ -83,10 +79,9 @@ export default function PostJob() {
                         id="email"
                         value={formData.email}
                         name="email"
-                        onChange={handleFormData}
+                        onChange={onChange}
                         className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Your email"
-                        required
                     />
                 </div>
 
@@ -97,11 +92,10 @@ export default function PostJob() {
                         id="coverLetter"
                         value={formData.coverLetter}
                         name="coverLetter"
-                        onChange={handleFormData}
+                        onChange={onChange}
                         className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Write your cover letter"
                         rows="6"
-                        required
                     />
                 </div>
 
