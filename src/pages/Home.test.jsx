@@ -42,4 +42,24 @@ describe('Home page', () => {
     // Wait for the Jobs Page component to be rendered
     await screen.findByText('Jobs Page');
   });
+  it('should navigate to the post-job page when the button is clicked', async () => {
+    const PostJob = () => <div>Post Job Page</div>;
+    const Stub = createRoutesStub([
+      {
+        path: "/",
+        Component: Home
+      },
+      {
+        path: "/post-job",
+        Component: PostJob
+      }
+    ]);
+
+    render(<Stub initialEntries={["/"]} />);
+    const applyForJobButton = screen.getByText('Apply for a job');
+    fireEvent.click(applyForJobButton);
+
+    // Wait for the Jobs Page component to be rendered
+    await screen.findByText('Post Job Page');
+  });
 });
