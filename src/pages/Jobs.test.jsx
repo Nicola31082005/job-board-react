@@ -1,5 +1,5 @@
-import { it, describe, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { it, describe, expect, vi, beforeEach, afterEach } from "vitest";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router";
 import React from 'react';
 import Jobs from "./Jobs";
@@ -8,6 +8,12 @@ beforeEach(() => {
     // Clear localStorage before each test
     localStorage.clear();
 });
+
+// Clean up after each test
+afterEach(() => {
+    cleanup();
+  });
+
 
 // Mock the JobApplicantListItem component to display props
 vi.mock("../components/common", () => ({
