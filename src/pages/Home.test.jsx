@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, cleanup } from "@testing-library/react";
-import { it, describe, expect, afterEach, vi } from "vitest";
+import { it, describe, expect, afterEach } from "vitest";
 import { createRoutesStub } from "react-router";
 import React from "react";
 import Home from "./Home";
