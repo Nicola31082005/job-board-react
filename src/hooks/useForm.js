@@ -43,5 +43,13 @@ export default function useForm(
     }
   };
 
-  return [formData, onChange, onSubmit, isSubmitting, formError, setFormError];
+  return [
+    formData,
+    onChange,
+    onSubmit,
+    isSubmitting,
+    formError,
+    setFormError,
+    setFormData,
+  ];
 }

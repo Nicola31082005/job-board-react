@@ -151,8 +151,24 @@ userController.get("/api/users/profile", authMiddleware, async (req, res) => {
 // Update user profile
 userController.put("/api/users/profile", authMiddleware, async (req, res) => {
   try {
-    const { username, email } = req.body;
-    const user = req.user;
+    const { username, email, currentPassword } = req.body;
+    const userId = req.user._id;
+
+    // Get user with password
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Verify current password
+    if (!currentPassword) {
+      return res.status(400).json({ message: "Current password is required" });
+    }
+
+    const isPasswordValid = await user.comparePassword(currentPassword);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
 
     // Check if email is taken (if changing email)
     if (email && email !== user.email) {

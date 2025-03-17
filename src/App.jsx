@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router'
 import './App.css'
 import { Footer, Header } from './components/layout'
-import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register } from './pages'
+import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register, Profile } from './pages'
 
 //Login, Register
 
@@ -19,6 +19,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
 

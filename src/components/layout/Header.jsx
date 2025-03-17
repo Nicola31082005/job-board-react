@@ -1,10 +1,32 @@
 import { Bars3Icon, XMarkIcon, UserIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const location = useLocation();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+    useEffect(() => {
+        if (token && userData) {
+            setIsAuthenticated(true);
+            setUser(JSON.parse(userData));
+        } else {
+            setIsAuthenticated(false);
+            setUser(null);
+        }
+    }, [token, userData]);
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setIsAuthenticated(false);
+        setUser(null);
+        navigate('/')
+    };
 
     const isActivePath = (path) => {
         return location.pathname === path ? "text-blue-600 font-semibold" : "text-gray-700";
@@ -48,9 +70,8 @@ export default function Header() {
                     </div>
                 </nav>
 
-                {/* Auth Links (Login/Register) */}
+                {/* Auth Links (Login/Register/Profile) */}
                 <div className="hidden md:flex items-center space-x-4">
-
                     {/* Post a Job Button */}
                     <Link
                         to="/post-job"
@@ -59,22 +80,41 @@ export default function Header() {
                         Apply for a job
                     </Link>
 
-                    <Link
-                        to="/login"
-                        className="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:text-blue-600 hover:border-blue-600 transition-colors duration-200"
-                    >
-                        <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
-                        Login
-                    </Link>
-                    <Link
-                        to="/register"
-                        className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md"
-                    >
-                        <UserIcon className="w-5 h-5 mr-2" />
-                        Register
-                    </Link>
-
-
+                    {isAuthenticated ? (
+                        <div className="flex items-center space-x-4">
+                            <Link
+                                to="/profile"
+                                className={`flex items-center px-4 py-2 border border-gray-300 rounded-lg ${isActivePath('/profile')} hover:text-blue-600 hover:border-blue-600 transition-colors duration-200`}
+                            >
+                                <UserIcon className="w-5 h-5 mr-2" />
+                                {user?.username || "Profile"}
+                            </Link>
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
+                            >
+                                <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <Link
+                                to="/login"
+                                className="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:text-blue-600 hover:border-blue-600 transition-colors duration-200"
+                            >
+                                <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
+                                Login
+                            </Link>
+                            <Link
+                                to="/register"
+                                className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md"
+                            >
+                                <UserIcon className="w-5 h-5 mr-2" />
+                                Register
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -120,22 +160,43 @@ export default function Header() {
                         Apply for a Job
                     </Link>
 
-                    {/* Separated Login and Register Links for Mobile */}
+                    {/* Separated Auth Links for Mobile */}
                     <div className="mt-5 pt-5 border-t border-gray-200 flex flex-col gap-3">
-                        <Link
-                            to="/login"
-                            className="flex items-center py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:text-blue-600 hover:border-blue-600 transition-colors duration-200"
-                        >
-                            <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
-                            Login
-                        </Link>
-                        <Link
-                            to="/register"
-                            className="flex items-center justify-center py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md"
-                        >
-                            <UserIcon className="w-5 h-5 mr-2" />
-                            Register
-                        </Link>
+                        {isAuthenticated ? (
+                            <>
+                                <Link
+                                    to="/profile"
+                                    className={`flex items-center py-2 px-4 border border-gray-300 rounded-lg ${isActivePath('/profile')} hover:text-blue-600 hover:border-blue-600 transition-colors duration-200`}
+                                >
+                                    <UserIcon className="w-5 h-5 mr-2" />
+                                    {user?.username || "Profile"}
+                                </Link>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center justify-center py-2 px-4 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
+                                >
+                                    <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    className="flex items-center py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:text-blue-600 hover:border-blue-600 transition-colors duration-200"
+                                >
+                                    <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
+                                    Login
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="flex items-center justify-center py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md"
+                                >
+                                    <UserIcon className="w-5 h-5 mr-2" />
+                                    Register
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </nav>
             )}
