@@ -1,4 +1,4 @@
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, UserIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
 
@@ -19,40 +19,60 @@ export default function Header() {
                 </Link>
 
                 {/* Desktop Menu */}
-                <nav className="hidden md:flex space-x-6">
-                    <Link
-                        to="/"
-                        className={`${isActivePath('/')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        to="/jobs"
-                        className={`${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
-                    >
-                        Applicants
-                    </Link>
-                    <Link
-                        to="/about"
-                        className={`${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
-                    >
-                        About
-                    </Link>
-                    <Link
-                        to="/contact"
-                        className={`${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
-                    >
-                        Contact
-                    </Link>
+                <nav className="hidden md:flex space-x-6 items-center">
+                    <div className="flex space-x-6">
+                        <Link
+                            to="/"
+                            className={`${isActivePath('/')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
+                        >
+                            Home
+                        </Link>
+                        <Link
+                            to="/jobs"
+                            className={`${isActivePath('/jobs')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
+                        >
+                            Applicants
+                        </Link>
+                        <Link
+                            to="/about"
+                            className={`${isActivePath('/about')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
+                        >
+                            About
+                        </Link>
+                        <Link
+                            to="/contact"
+                            className={`${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
+                        >
+                            Contact
+                        </Link>
+                    </div>
                 </nav>
 
-                {/* Post a Job Button */}
-                <Link
-                    to="/post-job"
-                    className="hidden md:block px-5 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
-                >
-                    Apply for a job
-                </Link>
+                {/* Auth Links (Login/Register) */}
+                <div className="hidden md:flex items-center space-x-4">
+                    <Link
+                        to="/login"
+                        className="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:text-blue-600 hover:border-blue-600 transition-colors duration-200"
+                    >
+                        <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
+                        Login
+                    </Link>
+                    <Link
+                        to="/register"
+                        className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md"
+                    >
+                        <UserIcon className="w-5 h-5 mr-2" />
+                        Register
+                    </Link>
+
+                    {/* Post a Job Button */}
+                    <Link
+                        to="/post-job"
+                        className="px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer ml-4"
+                    >
+                        Apply for a job
+                    </Link>
+                </div>
 
                 {/* Mobile Menu Button */}
                 <button
@@ -92,10 +112,28 @@ export default function Header() {
                     </Link>
                     <Link
                         to="/post-job"
-                        className="block mt-4 px-5 py-2 bg-blue-600 text-white font-semibold text-center rounded-full hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
+                        className="block mt-4 px-5 py-2 bg-green-600 text-white font-semibold text-center rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer"
                     >
-                        Post a Job
+                        Apply for a Job
                     </Link>
+
+                    {/* Separated Login and Register Links for Mobile */}
+                    <div className="mt-5 pt-5 border-t border-gray-200 flex flex-col gap-3">
+                        <Link
+                            to="/login"
+                            className="flex items-center py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:text-blue-600 hover:border-blue-600 transition-colors duration-200"
+                        >
+                            <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
+                            Login
+                        </Link>
+                        <Link
+                            to="/register"
+                            className="flex items-center justify-center py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md"
+                        >
+                            <UserIcon className="w-5 h-5 mr-2" />
+                            Register
+                        </Link>
+                    </div>
                 </nav>
             )}
         </header>

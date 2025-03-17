@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router'
 import './App.css'
 import { Footer, Header } from './components/layout'
-import { Home, Jobs, PostJob, JobApplicantDetails, About } from './pages'
+import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register } from './pages'
 
 function App() {
   return (
@@ -15,6 +15,8 @@ function App() {
           <Route path="/post-job" element={<PostJob />} />
           <Route path="/jobs/:id" element={<JobApplicantDetails />} />
           <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </main>
 
