@@ -3,6 +3,8 @@ import './App.css'
 import { Footer, Header } from './components/layout'
 import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register } from './pages'
 
+//Login, Register
+
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
