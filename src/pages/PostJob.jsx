@@ -30,15 +30,12 @@ export default function PostJob() {
             try {
                 // Create a new job applicant object
                 const newApplicant = {
-                    id: Date.now(), // Generate a unique ID
                     first_name: formData.first_name,
                     last_name: formData.last_name,
                     email: formData.email,
                     avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.first_name + ' ' + formData.last_name)}&background=random`,
                     coverLetter: formData.coverLetter
                 };
-
-                console.log(newApplicant);
 
                 // Submit to API
                 const response = await fetch(`${API_BASE_URL}/api/job-applicants`, {
