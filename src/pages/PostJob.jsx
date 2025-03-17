@@ -7,7 +7,8 @@ const API_BASE_URL = "http://localhost:5000";
 
 export default function PostJob() {
     const initialFormData = {
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
         coverLetter: '',
     }
@@ -19,7 +20,7 @@ export default function PostJob() {
     const [formData, onChange, onSubmit, isSubmitting, formError, setFormError] = useForm(initialFormData, handleSubmit, validateForm)
 
     function validateForm(formData) {
-        if (!formData.name || !formData.email || !formData.coverLetter) {
+        if (!formData.first_name || !formData.last_name || !formData.email || !formData.coverLetter) {
             return "Please fill in all fields.";
         }
     }
@@ -30,12 +31,14 @@ export default function PostJob() {
                 // Create a new job applicant object
                 const newApplicant = {
                     id: Date.now(), // Generate a unique ID
-                    first_name: formData.name.split(' ')[0],
-                    last_name: formData.name.split(' ')[1] || '',
+                    first_name: formData.first_name,
+                    last_name: formData.last_name,
                     email: formData.email,
-                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.first_name + ' ' + formData.last_name)}&background=random`,
                     coverLetter: formData.coverLetter
                 };
+
+                console.log(newApplicant);
 
                 // Submit to API
                 const response = await fetch(`${API_BASE_URL}/api/job-applicants`, {
@@ -67,17 +70,31 @@ export default function PostJob() {
         <div className="max-w-3xl mx-auto px-6 py-12">
             <h2 className="text-3xl font-bold text-blue-600 mb-6">Apply for the Job</h2>
             <form onSubmit={onSubmit} className="space-y-6">
-                {/* Name */}
+                {/* First Name */}
                 <div>
-                    <label htmlFor="name" className="block text-gray-700">Full Name</label>
+                    <label htmlFor="first_name" className="block text-gray-700">First Name</label>
                     <input
                         type="text"
-                        id="name"
-                        value={formData.name}
-                        name="name"
+                        id="first_name"
+                        value={formData.first_name}
+                        name="first_name"
                         onChange={onChange}
                         className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Your full name"
+                        placeholder="Your first name"
+                    />
+                </div>
+
+                {/* Last Name */}
+                <div>
+                    <label htmlFor="last_name" className="block text-gray-700">Last Name</label>
+                    <input
+                        type="text"
+                        id="last_name"
+                        value={formData.last_name}
+                        name="last_name"
+                        onChange={onChange}
+                        className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Your last name"
                     />
                 </div>
 
