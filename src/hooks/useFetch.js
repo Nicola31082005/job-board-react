@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 
-export function useFetch(url) {
+// Base URL for the API
+const API_BASE_URL = "http://localhost:5000";
+
+export function useFetch(endpoint) {
   const [data, setData] = useState(null);
   const [pending, setPending] = useState(true);
   const [error, setError] = useState(null);
@@ -11,12 +14,27 @@ export function useFetch(url) {
 
     const fetchData = async () => {
       try {
+        // Only fetch if endpoint is provided
+        if (!endpoint) {
+          setPending(false);
+          return;
+        }
+
+        // Construct the full URL
+        const url = endpoint.startsWith("http")
+          ? endpoint
+          : `${API_BASE_URL}${endpoint}`;
+
         const response = await fetch(url, {
           signal: abortController.signal,
         });
+
         if (!response.ok) {
-          throw new Error("Failed to fetch");
+          throw new Error(
+            `Failed to fetch: ${response.status} ${response.statusText}`
+          );
         }
+
         const result = await response.json();
         setData(result);
         setPending(false);
@@ -29,16 +47,12 @@ export function useFetch(url) {
       }
     };
 
-    if (url) {
-      fetchData();
-    } else {
-      setPending(false); // If no URL, set pending to false
-    }
+    fetchData();
 
     return () => {
       abortController.abort(); // Abort the fetch on cleanup
     };
-  }, [url]);
+  }, [endpoint]);
 
   return [data, pending, error];
 }

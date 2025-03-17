@@ -6,64 +6,25 @@ export default function Jobs() {
     const [jobs, setJobs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [shouldFetch, setShouldFetch] = useState(false);
 
+    // Use our API endpoint
+    const [data, pending, fetchError] = useFetch('/api/job-applicants');
 
-    const [data, pending, fetchError] = useFetch(
-        shouldFetch ? 'https://reqres.in/api/users' : null
-    );
-
+    // Update state when data is fetched
     useEffect(() => {
-        const initializeJobs = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-
-                // Get local applicants
-                const localApplicants = JSON.parse(localStorage.getItem('jobApplicants') || '[]');
-
-                if (localApplicants.length > 0) {
-                    setJobs(localApplicants);
-                    setIsLoading(false); // Stop loading if local data exists
-                } else {
-                    setShouldFetch(true); // Trigger fetch if no local data
-                }
-            } catch (err) {
-                setError(err.message);
-                setIsLoading(false);
-            }
-        };
-
-        initializeJobs();
-
-        // Set up localStorage change listener
-        const handleStorageChange = () => {
-            const updatedApplicants = JSON.parse(localStorage.getItem('jobApplicants') || '[]');
-            setJobs(updatedApplicants);
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (data && shouldFetch) {
-            setJobs(data.data);
-            localStorage.setItem('jobApplicants', JSON.stringify(data.data));
+        if (data) {
+            setJobs(data);
             setIsLoading(false);
-            setShouldFetch(false);
         }
-    }, [data, shouldFetch]);
+    }, [data]);
 
+    // Handle fetch errors
     useEffect(() => {
         if (fetchError) {
             setError(fetchError.message);
             setIsLoading(false);
         }
     }, [fetchError]);
-
 
     if (isLoading || pending) {
         return (
@@ -100,16 +61,22 @@ export default function Jobs() {
         <div className="max-w-7xl mx-auto px-6 py-22">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Job Applicants</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {jobs.map((job) => (
-                    <JobApplicantListItem
-                        key={job.id}
-                        id={job.id}
-                        email={job.email}
-                        first_name={job.first_name}
-                        last_name={job.last_name}
-                        avatar={job.avatar}
-                    />
-                ))}
+                {jobs.length > 0 ? (
+                    jobs.map((job) => (
+                        <JobApplicantListItem
+                            key={job.id}
+                            id={job.id}
+                            email={job.email}
+                            first_name={job.first_name}
+                            last_name={job.last_name}
+                            avatar={job.avatar}
+                        />
+                    ))
+                ) : (
+                    <div className="col-span-3 text-center py-10">
+                        <p className="text-gray-500 text-lg">No job applicants found.</p>
+                    </div>
+                )}
             </div>
         </div>
     );
