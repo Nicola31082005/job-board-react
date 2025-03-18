@@ -3,8 +3,8 @@ import { it, describe, expect, afterEach, beforeEach } from "vitest";
 import { createRoutesStub } from "react-router";
 import React from "react";
 import JobApplicantDetails from "./JobApplicantDetails";
+import AuthContext from "../context/authContext";
 
-// Mock localStorage
 const mockApplicant = {
     id: 1,
     first_name: "John",
@@ -12,15 +12,29 @@ const mockApplicant = {
     email: "john.doe@example.com"
 };
 
+const mockAuthContext = {
+    authData: {
+        user: mockApplicant,
+        token: "mock-token"
+    },
+    setAuthData: vi.fn(),
+    clearAuthData: vi.fn()
+};
+
+const TestWrapper = ({ children }) => (
+    <AuthContext.Provider value={mockAuthContext}>
+        {children}
+    </AuthContext.Provider>
+);
+
 beforeEach(() => {
-    // Set up localStorage with mock data
-    localStorage.setItem('jobApplicants', JSON.stringify([mockApplicant]));
+    // Reset mock functions
+    mockAuthContext.setAuthData.mockClear();
+    mockAuthContext.clearAuthData.mockClear();
 });
 
 afterEach(() => {
     cleanup();
-    // Clear localStorage after each test
-    localStorage.clear();
 });
 
 describe('Initial component render', () => {
@@ -32,7 +46,11 @@ describe('Initial component render', () => {
             }
         ]);
 
-        render(<Stub initialEntries={["/jobs/1"]} />);
+        render(
+            <TestWrapper>
+                <Stub initialEntries={["/jobs/1"]} />
+            </TestWrapper>
+        );
 
         // Wait for the component to load and display the data
         expect(screen.getByText('Applicant Details')).toBeInTheDocument();
@@ -49,7 +67,11 @@ describe('Initial component render', () => {
             }
         ]);
 
-        render(<Stub initialEntries={["/jobs/1"]} />);
+        render(
+            <TestWrapper>
+                <Stub initialEntries={["/jobs/1"]} />
+            </TestWrapper>
+        );
 
         const backButton = screen.getByText('Back to Jobs');
         expect(backButton).toBeInTheDocument();
@@ -59,7 +81,6 @@ describe('Initial component render', () => {
 
 describe('Back button navigation', () => {
     it('should navigate to the jobs page when clicked', () => {
-
         const JobsPage = () => {
             return (
                 <div>
@@ -79,7 +100,11 @@ describe('Back button navigation', () => {
             }
         ]);
 
-        render(<Stub initialEntries={["/jobs/1"]} />);
+        render(
+            <TestWrapper>
+                <Stub initialEntries={["/jobs/1"]} />
+            </TestWrapper>
+        );
 
         const backButton = screen.getByText('Back to Jobs');
         fireEvent.click(backButton);

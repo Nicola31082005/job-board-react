@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import useForm from "../hooks/useForm"; // Import the useForm hook
 import authService from "../services/authService";
+import AuthContext from "../context/authContext";
 
 
 export default function Profile() {
+    const { authData, setAuthDataHandler, clearAuthData } = useContext(AuthContext);
     const [user, setUser] = useState(null);
     const [success, setSuccess] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +28,6 @@ export default function Profile() {
 
     const submitForm = async () => {
         try {
-            const token = localStorage.getItem("token");
             const currentPassword = formData.currentPassword;
             const newPassword = formData.newPassword;
             const email = formData.email;
@@ -35,16 +36,19 @@ export default function Profile() {
             let isProfileUpdated = false;
 
             // First, try to update profile (which also verifies the current password)
-            const profileData = await authService.profileUpdate(currentPassword, email, username, token);
+            const profileData = await authService.profileUpdate(currentPassword, email, username, authData.token);
             isProfileUpdated = true;
 
             // Only attempt password change if new password is provided
             if (newPassword) {
-                await authService.passwordChange(currentPassword, newPassword, token);
+                await authService.passwordChange(currentPassword, newPassword, authData.token);
             }
 
             // If we got here, both operations succeeded
-            localStorage.setItem("user", JSON.stringify(profileData.user));
+            setAuthDataHandler({
+                ...authData,
+                user: profileData.user
+            });
             setUser(profileData.user);
             setSuccess("Profile updated successfully");
             setIsEditing(false);
@@ -75,25 +79,24 @@ export default function Profile() {
     );
 
     useEffect(() => {
-        const userData = localStorage.getItem("user");
-        if (!userData) {
+        if (!authData.user || !authData.token) {
             navigate("/login");
             return;
         }
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
+
+        setUser(authData.user);
 
         // Update form data with user information
         setFormData(prevData => ({
             ...prevData,
-            username: parsedUser.username,
-            email: parsedUser.email,
+            username: authData.user.username,
+            email: authData.user.email,
         }));
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        // Clear auth data from context
+        clearAuthData();
         navigate("/login");
     };
 

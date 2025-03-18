@@ -3,17 +3,39 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router";
 import React from 'react';
 import Jobs from "./Jobs";
+import AuthContext from "../context/authContext";
+
+const mockAuthContext = {
+    authData: {
+        user: {
+            id: 1,
+            username: "testuser",
+            email: "test@example.com"
+        },
+        token: "mock-token"
+    },
+    setAuthData: vi.fn(),
+    clearAuthData: vi.fn()
+};
+
+const TestWrapper = ({ children }) => (
+    <AuthContext.Provider value={mockAuthContext}>
+        <BrowserRouter>
+            {children}
+        </BrowserRouter>
+    </AuthContext.Provider>
+);
 
 beforeEach(() => {
-    // Clear localStorage before each test
-    localStorage.clear();
+    // Reset mock functions
+    mockAuthContext.setAuthData.mockClear();
+    mockAuthContext.clearAuthData.mockClear();
 });
 
 // Clean up after each test
 afterEach(() => {
     cleanup();
-  });
-
+});
 
 // Mock the JobApplicantListItem component to display props
 vi.mock("../components/common", () => ({
@@ -27,14 +49,15 @@ vi.mock("../components/common", () => ({
 describe('Jobs initial render', () => {
     it('should render the jobs page', async () => {
         render(
-            <BrowserRouter>
+            <TestWrapper>
                 <Jobs />
-            </BrowserRouter>
+            </TestWrapper>
         );
         await waitFor(() => {
             expect(screen.getByText('Job Applicants')).toBeInTheDocument();
         });
     });
+
     it('should render loading spinner when fetching jobs', async () => {
         // Mock fetch to delay the response
         global.fetch = vi.fn(() =>
@@ -49,9 +72,9 @@ describe('Jobs initial render', () => {
         );
 
         render(
-            <BrowserRouter>
+            <TestWrapper>
                 <Jobs />
-            </BrowserRouter>
+            </TestWrapper>
         );
 
         //Check for loading spinner
@@ -78,16 +101,16 @@ describe('Jobs initial render', () => {
         );
 
         render(
-            <BrowserRouter>
+            <TestWrapper>
                 <Jobs />
-            </BrowserRouter>
+            </TestWrapper>
         );
 
         await waitFor(() => {
             expect(screen.getByText('John Doe - john.doe@example.com')).toBeInTheDocument();
             expect(screen.getByText('Jane Smith - jane.smith@example.com')).toBeInTheDocument();
         });
-    })
+    });
 });
 
 

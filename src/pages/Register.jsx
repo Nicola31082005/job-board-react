@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate, Link } from "react-router";
 import useForm from "../hooks/useForm";
 import authService from "../services/authService";
-
+import AuthContext from "../context/authContext";
 
 export default function Register() {
   const navigate = useNavigate();
+  const { setAuthDataHandler } = useContext(AuthContext);
+
 
   // Validation function for useForm
   const validateForm = (formData) => {
@@ -30,13 +32,13 @@ export default function Register() {
         const { confirmPassword, ...registrationData } = formData;
         console.log(registrationData);
 
-
         const data = await authService.register(registrationData)
 
-
-        // Store token and user data
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        // Update auth context
+        setAuthDataHandler({
+            user: data.user,
+            token: data.token,
+        });
 
         // Redirect to jobs page
         navigate("/jobs");
