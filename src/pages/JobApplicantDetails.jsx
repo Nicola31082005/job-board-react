@@ -1,21 +1,26 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { useEffect, useState, useContext } from "react";
+import { Link, useParams, useNavigate } from "react-router";
 import React from "react";
 import { useFetch } from "../hooks/useFetch";
+import AuthContext from "../context/authContext";
+import authService from "../services/authService";
 
 export default function JobApplicantDetails() {
     const params = useParams();
-    const userId = params.id;
+    const applicantId = params.id;
     const [applicant, setApplicant] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const { authData } = useContext(AuthContext);
 
-    // Fetch applicant details from API
-    const [data, pending, fetchError] = useFetch(`/api/job-applicants/${userId}`);
+    // Public endpoint - no auth required
+    const [data, pending, fetchError] = useFetch(`/api/job-applicants/${applicantId}`);
 
     // Update with API data when it arrives
     useEffect(() => {
         if (data) {
+            console.log(data);
             setApplicant(data);
             setIsLoading(false);
         }
@@ -28,6 +33,23 @@ export default function JobApplicantDetails() {
             setIsLoading(false);
         }
     }, [fetchError]);
+
+    // Only show delete button for authenticated users - we will assume they can delete
+    // any application since we're no longer tracking ownership in the public view
+    const handleDelete = async () => {
+        if (!authData?.token) {
+            setError("You must be logged in to delete an application");
+            return;
+        }
+
+        try {
+            await authService.deleteApplicant(applicantId, authData.token);
+            navigate('/jobs');
+        } catch (error) {
+            console.error("Error deleting applicant:", error);
+            setError(error.message);
+        }
+    };
 
     if (isLoading || pending) {
         return (
@@ -43,21 +65,31 @@ export default function JobApplicantDetails() {
     if (error) {
         return (
             <div className="max-w-3xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg">
-                <h1 className="text-3xl font-bold text-gray-800 mb-4">Error</h1>
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-3xl font-bold text-gray-800">Error</h1>
+                    <Link
+                        to="/jobs"
+                        className="px-5 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600"
+                    >
+                        Back to Jobs
+                    </Link>
+                </div>
                 <p className="text-red-500">{error}</p>
-                <Link
-                    to="/jobs"
-                    className="mt-4 inline-block px-5 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600"
-                >
-                    Back to Jobs
-                </Link>
             </div>
         );
     }
 
     return (
         <div className="max-w-3xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">Applicant Details</h1>
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold text-gray-800">Applicant Details</h1>
+                <Link
+                    to="/jobs"
+                    className="px-5 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600"
+                >
+                    Back to Jobs
+                </Link>
+            </div>
 
             {/* Applicant Info */}
             <div className="border-b pb-4 mb-4">
@@ -81,13 +113,17 @@ export default function JobApplicantDetails() {
                 )}
             </div>
 
-            {/* Back Button */}
-            <Link
-                to="/jobs"
-                className="px-5 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600"
-            >
-                Back to Jobs
-            </Link>
+            {/* Action Buttons - Only show for authenticated users */}
+            {authData?.token && (
+                <div className="mt-6">
+                    <button
+                        onClick={handleDelete}
+                        className="w-full px-5 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors duration-200"
+                    >
+                        Delete Application
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

@@ -78,4 +78,22 @@ export default {
 
     return data;
   },
+  async deleteApplicant(userId, token) {
+    const response = await fetch(
+      `${API_BASE_URL}/api/job-applicants/${userId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete applicant");
+    }
+
+    return response.json();
+  },
 };
