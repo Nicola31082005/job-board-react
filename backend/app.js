@@ -3,7 +3,10 @@ import routes from "./routes.js";
 import "dotenv/config";
 import db from "./config/db.js";
 import cors from "cors";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 
 app.use(express.json());

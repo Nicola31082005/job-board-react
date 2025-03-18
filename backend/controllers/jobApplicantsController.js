@@ -2,6 +2,9 @@ import { Router } from "express";
 import jobApplicantsService from "../services/jobApplicantsService.js";
 import getErrorMessage from "../utils/getError.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const jobApplicantsController = Router();
 
@@ -136,32 +139,27 @@ jobApplicantsController.post(
 jobApplicantsController.delete(
   "/api/job-applicants/:id",
   authenticateToken,
-  requireAuth,
   async (req, res) => {
     try {
+      // Get applicant ID from params
+      const applicantId = req.params.id;
+
       // First get the applicant
       const applicant = await jobApplicantsService.getJobApplicantById(
-        req.params.id
+        applicantId
       );
 
       if (!applicant) {
         return res.status(404).json({ message: "Job applicant not found" });
       }
 
-      // For admin users (if you implement admin roles later)
-      // or if the applicant doesn't have a userId, allow the delete
-      if (!applicant.userId || req.user.id === applicant.userId) {
-        const result = await jobApplicantsService.deleteJobApplicant(
-          req.params.id
-        );
-        return res
-          .status(200)
-          .json({ message: "Job applicant deleted successfully" });
-      } else {
-        return res.status(403).json({
-          message: "You don't have permission to delete this application",
-        });
-      }
+      // console.log(req.user);
+      // console.log(applicant);
+
+      await jobApplicantsService.deleteJobApplicant(applicantId);
+      return res
+        .status(200)
+        .json({ message: "Job applicant deleted successfully" });
     } catch (error) {
       console.error("Error deleting job applicant:", error);
       const err = getErrorMessage(error);

@@ -20,7 +20,7 @@ export default function JobApplicantDetails() {
     useEffect(() => {
         if (data) {
             setApplicant(data);
-            setIsOwner(data.email === authData.user.email);
+            setIsOwner(data.email === authData.user?.email);
         }
     }, [data, authData]);
 

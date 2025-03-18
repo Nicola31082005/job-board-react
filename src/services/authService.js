@@ -78,9 +78,9 @@ export default {
 
     return data;
   },
-  async deleteApplicant(userId, token) {
+  async deleteApplicant(applicantId, token) {
     const response = await fetch(
-      `${API_BASE_URL}/api/job-applicants/${userId}`,
+      `${API_BASE_URL}/api/job-applicants/${applicantId}`,
       {
         method: "DELETE",
         headers: {
@@ -90,10 +90,20 @@ export default {
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete applicant");
+    // Try to parse the response as JSON
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      // If parsing fails, create a generic error object
+      data = { message: "Failed to delete applicant" };
     }
 
-    return response.json();
+    // If the response was not OK, throw an error with the message from the server
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to delete applicant");
+    }
+
+    return data;
   },
 };

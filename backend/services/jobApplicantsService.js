@@ -14,6 +14,6 @@ export default {
   },
 
   async deleteJobApplicant(id) {
-    return await JobApplicant.findOneAndDelete({ id: id });
+    return await JobApplicant.findByIdAndDelete(id);
   },
 };
