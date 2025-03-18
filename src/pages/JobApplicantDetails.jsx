@@ -6,36 +6,31 @@ import AuthContext from "../context/authContext";
 import authService from "../services/authService";
 
 export default function JobApplicantDetails() {
+    const navigate = useNavigate();
     const params = useParams();
     const applicantId = params.id;
     const [applicant, setApplicant] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
+    const [isOwner, setIsOwner] = useState(false);
     const { authData } = useContext(AuthContext);
-
     // Public endpoint - no auth required
     const [data, pending, fetchError] = useFetch(`/api/job-applicants/${applicantId}`);
 
     // Update with API data when it arrives
     useEffect(() => {
         if (data) {
-            console.log(data);
             setApplicant(data);
-            setIsLoading(false);
+            setIsOwner(data.email === authData.user.email);
         }
-    }, [data]);
+    }, [data, authData]);
 
     // Handle API errors
     useEffect(() => {
         if (fetchError) {
             setError(fetchError.message);
-            setIsLoading(false);
         }
     }, [fetchError]);
 
-    // Only show delete button for authenticated users - we will assume they can delete
-    // any application since we're no longer tracking ownership in the public view
     const handleDelete = async () => {
         if (!authData?.token) {
             setError("You must be logged in to delete an application");
@@ -51,7 +46,7 @@ export default function JobApplicantDetails() {
         }
     };
 
-    if (isLoading || pending) {
+    if (pending) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="relative">
@@ -113,8 +108,8 @@ export default function JobApplicantDetails() {
                 )}
             </div>
 
-            {/* Action Buttons - Only show for authenticated users */}
-            {authData?.token && (
+
+            {isOwner && (
                 <div className="mt-6">
                     <button
                         onClick={handleDelete}

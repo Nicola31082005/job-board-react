@@ -1,22 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { JobApplicantListItem } from "../components/common";
 import { useFetch } from "../hooks/useFetch";
-import AuthContext from "../context/authContext";
 
 export default function Jobs() {
     const [jobs, setJobs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { authData } = useContext(AuthContext);
 
-    // Use our API endpoint with optional auth token
-    const headers = authData?.token
-        ? { 'Authorization': `Bearer ${authData.token}` }
-        : {};
 
-    const [data, pending, fetchError] = useFetch('/api/job-applicants', {
-        headers
-    });
+
+    const [data, pending, fetchError] = useFetch('/api/job-applicants');
 
     // Update state when data is fetched
     useEffect(() => {
