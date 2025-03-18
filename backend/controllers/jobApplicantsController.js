@@ -20,7 +20,7 @@ jobApplicantsController.get("/api/job-applicants", async (req, res) => {
 jobApplicantsController.get("/api/job-applicants/:id", async (req, res) => {
   try {
     const applicant = await jobApplicantsService.getJobApplicantById(
-      Number(req.params.id)
+     req.params.id
     );
 
     if (!applicant) {

@@ -10,7 +10,7 @@ export default {
   },
 
   async getJobApplicantById(id) {
-    return await JobApplicant.findOne({ id: id });
+    return await JobApplicant.findOne({ _id: id });
   },
 
   async deleteJobApplicant(id) {

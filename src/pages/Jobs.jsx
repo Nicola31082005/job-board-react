@@ -64,8 +64,8 @@ export default function Jobs() {
                 {jobs.length > 0 ? (
                     jobs.map((job) => (
                         <JobApplicantListItem
-                            key={job.id}
-                            id={job.id}
+                            key={job._id}
+                            id={job._id}
                             email={job.email}
                             first_name={job.first_name}
                             last_name={job.last_name}

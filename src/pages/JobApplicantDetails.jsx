@@ -5,7 +5,7 @@ import { useFetch } from "../hooks/useFetch";
 
 export default function JobApplicantDetails() {
     const params = useParams();
-    const userId = Number(params.id);
+    const userId = params.id;
     const [applicant, setApplicant] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
