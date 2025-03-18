@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate, Link } from "react-router";
 import useForm from "../hooks/useForm";
+import authService from "../services/authService";
 
 // API base URL
-const API_BASE_URL = "http://localhost:5000";
 
 export default function Login() {
     const [formData, onChange, onSubmit, isSubmitting, formError, setFormError] = useForm({
@@ -16,19 +16,11 @@ export default function Login() {
     function handleSubmit() {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/users/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                });
+                const email = formData.email
+                const password = formData.password
 
-                const data = await response.json();
 
-                if (!response.ok) {
-                    throw new Error(data.message || "Login failed");
-                }
+                const data = await authService.login({ email, password });
 
                 // Store token and user data
                 localStorage.setItem("token", data.token);
