@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import useForm from "../hooks/useForm"; // Import the useForm hook
+import authService from "../services/authService";
 
-const API_BASE_URL = "http://localhost:5000";
 
 export default function Profile() {
     const [user, setUser] = useState(null);
@@ -27,50 +27,25 @@ export default function Profile() {
     const submitForm = async () => {
         try {
             const token = localStorage.getItem("token");
+            const currentPassword = formData.currentPassword;
+            const newPassword = formData.newPassword;
+            const email = formData.email;
+            const username = formData.username;
 
-            // Check if password change is requested
-            if (formData.currentPassword && formData.newPassword) {
-                // Send password change request
-                const passwordResponse = await fetch(`${API_BASE_URL}/api/users/password`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        currentPassword: formData.currentPassword,
-                        newPassword: formData.newPassword
-                    }),
-                });
+            let isProfileUpdated = false;
 
-                const passwordData = await passwordResponse.json();
-                if (!passwordResponse.ok) {
-                    throw new Error(passwordData.message || "Failed to update password");
-                }
+            // First, try to update profile (which also verifies the current password)
+            const profileData = await authService.profileUpdate(currentPassword, email, username, token);
+            isProfileUpdated = true;
+
+            // Only attempt password change if new password is provided
+            if (newPassword) {
+                await authService.passwordChange(currentPassword, newPassword, token);
             }
 
-            // Send profile update request
-            const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    email: formData.email,
-                    currentPassword: formData.currentPassword
-                }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to update profile");
-            }
-
-            localStorage.setItem("user", JSON.stringify(data.user));
-            setUser(data.user);
+            // If we got here, both operations succeeded
+            localStorage.setItem("user", JSON.stringify(profileData.user));
+            setUser(profileData.user);
             setSuccess("Profile updated successfully");
             setIsEditing(false);
 
