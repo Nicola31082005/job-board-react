@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";  // You can use this to navigate after submission
 import useForm from "../hooks/useForm";
-
-// API base URL
-const API_BASE_URL = "http://localhost:5000";
+import jobsService from "../services/jobsService";
 
 export default function PostJob() {
     const initialFormData = {
@@ -37,19 +35,7 @@ export default function PostJob() {
                     coverLetter: formData.coverLetter
                 };
 
-                // Submit to API
-                const response = await fetch(`${API_BASE_URL}/api/job-applicants`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(newApplicant),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to submit application');
-                }
+                await jobsService.addApplicant(newApplicant)
 
                 // Navigate to jobs page after successful submission
                 setTimeout(() => {
