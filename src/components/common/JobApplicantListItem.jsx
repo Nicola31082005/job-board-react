@@ -6,11 +6,17 @@ export default function JobApplicantListItem({
     email,
     first_name,
     last_name,
-    avatar
+    avatar,
+    pending
 
 }) {
     return (
         <Link to={`/jobs/${id}`} key={id} data-testid={`job-applicant-list-item`} className="bg-white p-6 shadow-md rounded-lg cursor-pointer">
+            {pending && (
+                <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">
+                    Submitting...
+                </div>
+            )}
             <h3 className="text-xl font-semibold text-blue-600">{email}</h3>
             <p className="text-gray-700">{first_name}</p>
             <p className="text-gray-500">{last_name}</p>

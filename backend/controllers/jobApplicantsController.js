@@ -60,41 +60,36 @@ jobApplicantsController.get("/api/job-applicants", async (req, res) => {
 });
 
 // Get a specific job applicant by ID - public endpoint WITH THROTTLING FOR TESTING
-jobApplicantsController.get(
-  "/api/job-applicants/:id",
-  testThrottle(3000), // Add 3 second delay for testing
-  async (req, res) => {
-    try {
-      const applicant = await jobApplicantsService.getJobApplicantById(
-        req.params.id
-      );
+jobApplicantsController.get("/api/job-applicants/:id", async (req, res) => {
+  try {
+    const applicant = await jobApplicantsService.getJobApplicantById(
+      req.params.id
+    );
 
-      if (!applicant) {
-        return res.status(404).json({ message: "Job applicant not found" });
-      }
-
-      // Return the applicant data without ownership information
-      res.status(200).json({
-        id: applicant.id || applicant._id,
-        first_name: applicant.first_name,
-        last_name: applicant.last_name,
-        email: applicant.email,
-        avatar: applicant.avatar,
-        coverLetter: applicant.coverLetter,
-      });
-    } catch (error) {
-      console.error("Error fetching job applicant:", error);
-      const err = getErrorMessage(error);
-      return res.status(500).json({ message: err });
+    if (!applicant) {
+      return res.status(404).json({ message: "Job applicant not found" });
     }
+
+    // Return the applicant data without ownership information
+    res.status(200).json({
+      id: applicant.id || applicant._id,
+      first_name: applicant.first_name,
+      last_name: applicant.last_name,
+      email: applicant.email,
+      avatar: applicant.avatar,
+      coverLetter: applicant.coverLetter,
+    });
+  } catch (error) {
+    console.error("Error fetching job applicant:", error);
+    const err = getErrorMessage(error);
+    return res.status(500).json({ message: err });
   }
-);
+});
 
 // Create a new job applicant - authentication optional but tracked
 jobApplicantsController.post(
   "/api/job-applicants",
   authenticateToken,
-  testThrottle(3000), // Add 3 second delay for testing
   async (req, res) => {
     const applicantData = req.body;
 
@@ -123,15 +118,12 @@ jobApplicantsController.post(
 
       // Return success response
       res.status(201).json({
-        message: "Job application submitted successfully!",
-        applicant: {
-          id: newApplicant.id || newApplicant._id,
-          first_name: newApplicant.first_name,
-          last_name: newApplicant.last_name,
-          email: newApplicant.email,
-          avatar: newApplicant.avatar,
-          coverLetter: newApplicant.coverLetter,
-        },
+        id: newApplicant.id || newApplicant._id,
+        first_name: newApplicant.first_name,
+        last_name: newApplicant.last_name,
+        email: newApplicant.email,
+        avatar: newApplicant.avatar,
+        coverLetter: newApplicant.coverLetter,
       });
     } catch (error) {
       console.error("Job application submission error:", error);

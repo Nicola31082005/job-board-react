@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { JobApplicantListItem } from "../components/common";
 import { useFetch } from "../hooks/useFetch";
+import { useJobsContext } from "../context/JobsContext";
 
 export default function Jobs() {
-    const [jobs, setJobs] = useState([]);
+    const { jobs, updateJobs, optimisticJobs } = useJobsContext();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
 
+    console.log(optimisticJobs);
 
     const [data, pending, fetchError] = useFetch('/api/job-applicants');
 
     // Update state when data is fetched
     useEffect(() => {
         if (data) {
-            setJobs(data);
+            updateJobs(data);
             setIsLoading(false);
         }
     }, [data]);
@@ -62,8 +64,8 @@ export default function Jobs() {
         <div className="max-w-7xl mx-auto px-6 py-22">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Job Applicants</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {jobs.length > 0 ? (
-                    jobs.map((job) => (
+                {optimisticJobs.length > 0 ? (
+                    optimisticJobs.map((job) => (
                         <JobApplicantListItem
                             key={job.id}
                             id={job.id}
@@ -72,6 +74,7 @@ export default function Jobs() {
                             last_name={job.last_name}
                             avatar={job.avatar}
                             isOwner={job.isOwner}
+                            pending={job.pending}
                         />
                     ))
                 ) : (

@@ -14,11 +14,7 @@ export function JobsProvider({ children }) {
   const [jobs, setJobs] = useState([]);
   const [optimisticJobs, addOptimisticJob] = useOptimistic(
     jobs,
-    (state, newJob) => [
-      ...state,
-      { ...newJob, pending: true } // Mark optimistic entries as pending
-    ]
-  );
+    (state, newJob) => [...state, newJob] );
 
   const updateJobs = (newJobs) => {
     setJobs(newJobs);
