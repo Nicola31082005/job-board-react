@@ -14,7 +14,6 @@ export default function PostJob() {
 
     async function handleSubmit(formData) {
             try {
-
                 const first_name = formData.get('first_name');
                 const last_name = formData.get('last_name');
                 const email = formData.get('email');
@@ -40,19 +39,19 @@ export default function PostJob() {
                 // Add the new applicant to the optimistic jobs list
                 addOptimisticJob(newApplicant);
 
+
+                const craetedApplicant = await jobsService.addApplicant(newApplicant)
+
+                updateJobs([...jobs, craetedApplicant]);
+
                 navigate('/jobs');
-
-                const createdApplicant = await jobsService.addApplicant(newApplicant)
-
-                // Update the jobs list with the new applicant
-                updateJobs([...jobs, createdApplicant]);
-
-                // Navigate to jobs page after successful submission
 
             } catch (error) {
                 setApiError(error.message);
             }
         }
+
+
 
     return (
         <div className="max-w-3xl mx-auto px-6 py-12">
@@ -120,14 +119,6 @@ export default function PostJob() {
                     >
                         Submit Application
                     </button>
-                </div>
-
-                <div>
-                    {optimisticJobs.map((job) => (
-                        <div key={job.id}>{job.first_name}
-                            <div>{job.pending ? 'pending' : 'not pending'}</div>
-                        </div>
-                    ))}
                 </div>
             </form>
 

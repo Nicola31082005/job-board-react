@@ -9,8 +9,6 @@ export default function Jobs() {
     const [error, setError] = useState(null);
 
 
-    console.log(optimisticJobs);
-
     const [data, pending, fetchError] = useFetch('/api/job-applicants');
 
     // Update state when data is fetched
@@ -74,7 +72,6 @@ export default function Jobs() {
                             last_name={job.last_name}
                             avatar={job.avatar}
                             isOwner={job.isOwner}
-                            pending={job.pending}
                         />
                     ))
                 ) : (
