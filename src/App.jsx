@@ -1,13 +1,13 @@
 import { Route, Routes } from 'react-router'
-import { useState } from 'react'
 import AuthContext from './context/authContext'
 import { Footer, Header } from './components/layout'
 import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register, Profile } from './pages'
 import './App.css'
 import { JobsProvider } from './context/JobsContext'
+import usePersistedState from './hooks/usePersistedState'
 
 function App() {
-  const [authData, setAuthData] = useState({});
+  const [authData, setAuthData] = usePersistedState('auth', {});
 
   const setAuthDataHandler = (authData) => {
     setAuthData(authData);

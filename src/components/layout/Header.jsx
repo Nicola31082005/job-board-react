@@ -1,5 +1,5 @@
 import { Bars3Icon, XMarkIcon, UserIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router";
 import AuthContext from "../../context/authContext";
 
@@ -7,12 +7,12 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
 
-  // Get auth data from context
-  const { authData, clearAuthData } = useContext(AuthContext);
-  const { user, token } = authData;
+    // Get auth data from context
+    const { authData, setAuthDataHandler } = useContext(AuthContext)
+
 
     const handleLogout = () => {
-        clearAuthData();
+        setAuthDataHandler({})
         navigate('/')
     };
 
@@ -68,14 +68,14 @@ export default function Header() {
                         Apply for a job
                     </Link>
 
-                    {token ? (
+                    {authData.user ? (
                         <div className="flex items-center space-x-4">
                             <Link
                                 to="/profile"
                                 className={`flex items-center px-4 py-2 border border-gray-300 rounded-lg ${isActivePath('/profile')} hover:text-blue-600 hover:border-blue-600 transition-colors duration-200`}
                             >
                                 <UserIcon className="w-5 h-5 mr-2" />
-                                {user?.username || "Profile"}
+                                {authData.user?.username || "Profile"}
                             </Link>
                             <button
                                 onClick={handleLogout}
@@ -150,14 +150,14 @@ export default function Header() {
 
                     {/* Separated Auth Links for Mobile */}
                     <div className="mt-5 pt-5 border-t border-gray-200 flex flex-col gap-3">
-                        {token ? (
+                        {authData.user ? (
                             <>
                                 <Link
                                     to="/profile"
                                     className={`flex items-center py-2 px-4 border border-gray-300 rounded-lg ${isActivePath('/profile')} hover:text-blue-600 hover:border-blue-600 transition-colors duration-200`}
                                 >
                                     <UserIcon className="w-5 h-5 mr-2" />
-                                    {user?.username || "Profile"}
+                                    {authData.user?.username || "Profile"}
                                 </Link>
                                 <button
                                     onClick={handleLogout}

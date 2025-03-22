@@ -36,12 +36,12 @@ export default function Profile() {
             let isProfileUpdated = false;
 
             // First, try to update profile (which also verifies the current password)
-            const profileData = await authService.profileUpdate(currentPassword, email, username, authData.token);
+            const profileData = await authService.profileUpdate(currentPassword, email, username, authData.accessToken);
             isProfileUpdated = true;
 
             // Only attempt password change if new password is provided
             if (newPassword) {
-                await authService.passwordChange(currentPassword, newPassword, authData.token);
+                await authService.passwordChange(currentPassword, newPassword, authData.accessToken);
             }
 
             // If we got here, both operations succeeded
@@ -79,7 +79,7 @@ export default function Profile() {
     );
 
     useEffect(() => {
-        if (!authData.user || !authData.token) {
+        if (!authData.user || !authData.accessToken) {
             navigate("/login");
             return;
         }

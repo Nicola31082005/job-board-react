@@ -3,10 +3,12 @@ import { useNavigate, Link } from "react-router";
 import useForm from "../hooks/useForm";
 import authService from "../services/authService";
 import AuthContext from "../context/authContext";
+import usePersistedState from "../hooks/usePersistedState";
 
 export default function Register() {
   const navigate = useNavigate();
   const { setAuthDataHandler } = useContext(AuthContext);
+
 
 
   // Validation function for useForm
@@ -34,11 +36,7 @@ export default function Register() {
 
         const data = await authService.register(registrationData)
 
-        // Update auth context
-        setAuthDataHandler({
-            user: data.user,
-            token: data.token,
-        });
+        setAuthDataHandler({ user: data.user, accessToken: data.token })
 
         // Redirect to jobs page
         navigate("/jobs");

@@ -4,6 +4,7 @@ import useForm from "../hooks/useForm";
 import authService from "../services/authService";
 import AuthContext from "../context/authContext";
 
+
 export default function Login() {
     const { setAuthDataHandler } = useContext(AuthContext);
     const [formData, onChange, onSubmit, isSubmitting, formError, setFormError] = useForm({
@@ -21,11 +22,8 @@ export default function Login() {
 
                 const data = await authService.login({ email, password });
 
-                // Update auth context
-                setAuthDataHandler({
-                    user: data.user,
-                    token: data.token,
-                });
+                setAuthDataHandler({ user: data.user, accessToken: data.token })
+
 
                 resolve();
                 // Redirect to jobs page
