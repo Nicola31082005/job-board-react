@@ -5,6 +5,9 @@ import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register, Profi
 import './App.css'
 import { JobsProvider } from './context/JobsContext'
 import usePersistedState from './hooks/usePersistedState'
+import AuthGuard from './components/guards/AuthGuard'
+import GuestGuard from './components/guards/GuestGuard'
+
 
 function App() {
   const [authData, setAuthData] = usePersistedState('auth', {});
@@ -17,6 +20,7 @@ function App() {
     setAuthData({});
   }
 
+
   return (
     <AuthContext.Provider value={{ authData, setAuthDataHandler, clearAuthData }}>
       <JobsProvider>
@@ -25,14 +29,22 @@ function App() {
 
           <main className="flex-grow mt-15">
             <Routes>
+
+              <Route element={<AuthGuard />} >
+                <Route path="/post-job" element={<PostJob />} />
+                <Route path="/profile" element={<Profile />} />
+              </Route>
+
+              <Route element={<GuestGuard />} >
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </Route>
+
               <Route path="/" element={<Home />} />
               <Route path="/jobs" element={<Jobs />} />
-              <Route path="/post-job" element={<PostJob />} />
               <Route path="/jobs/:id" element={<JobApplicantDetails />} />
               <Route path="/about" element={<About />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/profile" element={<Profile />} />
+
             </Routes>
           </main>
 
