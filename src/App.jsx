@@ -1,13 +1,13 @@
+import './App.css'
 import { Route, Routes } from 'react-router'
 import AuthContext from './context/authContext'
-import { Footer, Header } from './components/layout'
-import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register, Profile } from './pages'
-import './App.css'
 import { JobsProvider } from './context/JobsContext'
-import usePersistedState from './hooks/usePersistedState'
 import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
+import { Footer, Header } from './components/layout'
+import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register, Profile } from './pages'
 import { ErrorBoundary } from 'react-error-boundary'
+import usePersistedState from './hooks/usePersistedState'
 import ErrorFallback from './components/common/ErrorFallback'
 
 function App() {

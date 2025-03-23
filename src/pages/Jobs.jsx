@@ -4,7 +4,7 @@ import { useFetch } from "../hooks/useFetch";
 import { useJobsContext } from "../context/JobsContext";
 
 export default function Jobs() {
-    const { jobs, updateJobs, optimisticJobs } = useJobsContext();
+    const { updateJobs, optimisticJobs } = useJobsContext();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 

@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router";
 import useForm from "../hooks/useForm";
 import authService from "../services/authService";
 import AuthContext from "../context/authContext";
-import usePersistedState from "../hooks/usePersistedState";
 
 export default function Register() {
   const navigate = useNavigate();
