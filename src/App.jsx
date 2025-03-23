@@ -7,7 +7,8 @@ import { JobsProvider } from './context/JobsContext'
 import usePersistedState from './hooks/usePersistedState'
 import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
-
+import { ErrorBoundary } from 'react-error-boundary'
+import ErrorFallback from './components/common/ErrorFallback'
 
 function App() {
   const [authData, setAuthData] = usePersistedState('auth', {});
@@ -21,6 +22,8 @@ function App() {
   }
 
 
+
+
   return (
     <AuthContext.Provider value={{ authData, setAuthDataHandler, clearAuthData }}>
       <JobsProvider>
@@ -31,9 +34,16 @@ function App() {
             <Routes>
 
               <Route element={<AuthGuard />} >
-                <Route path="/post-job" element={<PostJob />} />
+                <Route
+                  path="/post-job"
+                  element={
+                    <ErrorBoundary FallbackComponent={ErrorFallback} >
+                      <PostJob />
+                    </ErrorBoundary>
+                  } />
                 <Route path="/profile" element={<Profile />} />
               </Route>
+
 
               <Route element={<GuestGuard />} >
                 <Route path="/login" element={<Login />} />

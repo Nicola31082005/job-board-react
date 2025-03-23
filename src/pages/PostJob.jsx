@@ -4,6 +4,7 @@ import { useJobsContext } from "../context/JobsContext";
 import { v4 as uuidv4 } from 'uuid';
 import PostJobModal from "../components/common/PostJobModal";
 import { useNavigate } from "react-router";
+import { useErrorBoundary } from "react-error-boundary";
 
 export default function PostJob() {
 
@@ -14,6 +15,7 @@ export default function PostJob() {
     const [modalApplicant, setModalApplicant] = useState({})
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
+    const { showBoundary } = useErrorBoundary();
 
 
 
@@ -23,6 +25,7 @@ export default function PostJob() {
         const last_name = formData.get('last_name');
         const email = formData.get('email');
         const coverLetter = formData.get('coverLetter');
+
 
         if (!first_name || !last_name || !email || !coverLetter) {
             setApiError("Please fill in all fields.");
@@ -50,7 +53,8 @@ export default function PostJob() {
                 setIsSubmitting(false);
             })
             .catch(error => {
-                setApiError(error.message);
+                // setApiError(error.message);
+                showBoundary(error)
                 setIsSubmitting(false);
             });
 
@@ -132,8 +136,8 @@ export default function PostJob() {
                             type="submit"
                             disabled={isSubmitting}
                             className={`w-full py-3 text-white font-semibold rounded-lg transition-all ${isSubmitting
-                                    ? "bg-blue-400 cursor-not-allowed"
-                                    : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                                ? "bg-blue-400 cursor-not-allowed"
+                                : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
                                 }`}
                         >
                             {isSubmitting ? (

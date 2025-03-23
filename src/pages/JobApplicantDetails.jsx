@@ -32,7 +32,7 @@ export default function JobApplicantDetails() {
     }, [fetchError]);
 
     const handleDelete = async () => {
-        if (!authData?.token) {
+        if (!authData?.accessToken) {
             setError("You must be logged in to delete an application");
             return;
         }
