@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 
 Modal.setAppElement('#root'); // Set this to your app root element
 
+
+
 export default function PostJobModal({ isOpen, onRequestClose, applicant, onContinue }) {
   return (
     <Modal

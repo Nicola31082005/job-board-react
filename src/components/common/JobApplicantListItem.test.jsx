@@ -14,26 +14,6 @@ const mockApplicant = {
     avatar: "https://example.com/avatar1.jpg"
 }
 
-const mockAuthContext = {
-    authData: {
-        user: mockApplicant,
-        token: "mock-token"
-    },
-    setAuthData: vi.fn(),
-    clearAuthData: vi.fn()
-};
-
-const TestWrapper = ({ children }) => (
-    <AuthContext.Provider value={mockAuthContext}>
-        {children}
-    </AuthContext.Provider>
-);
-
-beforeEach(() => {
-    // Reset mock functions
-    mockAuthContext.setAuthData.mockClear();
-    mockAuthContext.clearAuthData.mockClear();
-});
 
 afterEach(() => {
     cleanup();
@@ -49,9 +29,7 @@ describe('initial render', () => {
         ]);
 
         render(
-            <TestWrapper>
-                <Stub initialEntries={["/jobs"]} />
-            </TestWrapper>
+            <Stub initialEntries={["/jobs"]} />
         );
 
         expect(screen.getByText('John')).toBeInTheDocument();
@@ -74,9 +52,7 @@ describe('Redirect to the job applicant details page', () => {
         ]);
 
         render(
-            <TestWrapper>
-                <Stub initialEntries={["/jobs"]} />
-            </TestWrapper>
+            <Stub initialEntries={["/jobs"]} />
         );
 
         const detailsButton = screen.getByText('View Details');
@@ -100,9 +76,7 @@ describe('Redirect to the job applicant details page', () => {
         ]);
 
         render(
-            <TestWrapper>
-                <Stub initialEntries={["/jobs"]} />
-            </TestWrapper>
+            <Stub initialEntries={["/jobs"]} />
         );
 
         const applicantListItem = screen.getByTestId('job-applicant-list-item');

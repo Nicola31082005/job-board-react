@@ -1,9 +1,13 @@
-import { fireEvent, render, screen, cleanup } from "@testing-library/react";
-import { it, describe, expect, afterEach, beforeEach } from "vitest";
+import { fireEvent, render, screen, cleanup, waitFor } from "@testing-library/react";
+import { it, describe, expect, afterEach, vi } from "vitest";
 import { createRoutesStub } from "react-router";
 import React from "react";
 import JobApplicantDetails from "./JobApplicantDetails";
 import AuthContext from "../context/authContext";
+
+
+
+
 
 const mockApplicant = {
     id: 1,
@@ -12,33 +16,35 @@ const mockApplicant = {
     email: "john.doe@example.com"
 };
 
-const mockAuthContext = {
-    authData: {
-        user: mockApplicant,
-        token: "mock-token"
-    },
-    setAuthData: vi.fn(),
-    clearAuthData: vi.fn()
-};
+vi.mock("../hooks/useFetch", () => ({
+    useFetch: () => [mockApplicant, false, null] // Returns mock data, no loading, no error
+}));
 
-const TestWrapper = ({ children }) => (
-    <AuthContext.Provider value={mockAuthContext}>
-        {children}
-    </AuthContext.Provider>
-);
-
-beforeEach(() => {
-    // Reset mock functions
-    mockAuthContext.setAuthData.mockClear();
-    mockAuthContext.clearAuthData.mockClear();
-});
 
 afterEach(() => {
     cleanup();
 });
 
-describe('Initial component render', () => {
-    it('should render the component with applicant details', async () => {
+describe('JobApplicantDetails Component', () => {
+    it('should render applicant details correctly', async () => {
+        const Stub = createRoutesStub([
+            {
+                path: "/jobs/:id",
+                Component: JobApplicantDetails
+            }
+        ]);
+
+        render(<Stub initialEntries={["/jobs/1"]} />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Applicant Details')).toBeInTheDocument();
+            expect(screen.getByText('John')).toBeInTheDocument();
+            expect(screen.getByText('Doe')).toBeInTheDocument();
+            expect(screen.getByText('john.doe@example.com')).toBeInTheDocument();
+        });
+    });
+
+    it('should render the back button with correct link', async () => {
         const Stub = createRoutesStub([
             {
                 path: "/jobs/:id",
@@ -47,47 +53,20 @@ describe('Initial component render', () => {
         ]);
 
         render(
-            <TestWrapper>
+            <AuthContext.Provider value={{ authData: { user: { email: "john.doe@example.com" } } }}>
                 <Stub initialEntries={["/jobs/1"]} />
-            </TestWrapper>
+            </AuthContext.Provider>
         );
 
-        // Wait for the component to load and display the data
-        expect(screen.getByText('Applicant Details')).toBeInTheDocument();
-        expect(screen.getByText('John')).toBeInTheDocument();
-        expect(screen.getByText('Doe')).toBeInTheDocument();
-        expect(screen.getByText('john.doe@example.com')).toBeInTheDocument();
+        await waitFor(() => {
+            const backButton = screen.getByText('Back to Jobs');
+            expect(backButton).toBeInTheDocument();
+            expect(backButton.closest('a')).toHaveAttribute('href', '/jobs');
+        });
     });
 
-    it('should render back button with correct link', () => {
-        const Stub = createRoutesStub([
-            {
-                path: "/jobs/:id",
-                Component: JobApplicantDetails
-            }
-        ]);
-
-        render(
-            <TestWrapper>
-                <Stub initialEntries={["/jobs/1"]} />
-            </TestWrapper>
-        );
-
-        const backButton = screen.getByText('Back to Jobs');
-        expect(backButton).toBeInTheDocument();
-        expect(backButton.closest('a')).toHaveAttribute('href', '/jobs');
-    });
-});
-
-describe('Back button navigation', () => {
-    it('should navigate to the jobs page when clicked', () => {
-        const JobsPage = () => {
-            return (
-                <div>
-                    <h1>Jobs Page</h1>
-                </div>
-            )
-        }
+    it('should navigate to the jobs page when clicking the back button', async () => {
+        const JobsPage = () => <div>Jobs Page</div>;
 
         const Stub = createRoutesStub([
             {
@@ -101,15 +80,15 @@ describe('Back button navigation', () => {
         ]);
 
         render(
-            <TestWrapper>
+            <AuthContext.Provider value={{ authData: { user: { email: "john.doe@example.com" } } }}>
                 <Stub initialEntries={["/jobs/1"]} />
-            </TestWrapper>
+            </AuthContext.Provider>
         );
 
-        const backButton = screen.getByText('Back to Jobs');
+        const backButton = await screen.findByText('Back to Jobs');
         fireEvent.click(backButton);
 
-        expect(screen.getByText('Jobs Page')).toBeInTheDocument();
+        // Ensure navigation to jobs page occurs
+        await screen.findByText('Jobs Page');
     });
 });
-
