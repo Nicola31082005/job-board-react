@@ -133,6 +133,38 @@ jobApplicantsController.post(
   }
 );
 
+// Update a job applicant - requires authentication
+jobApplicantsController.put(
+  "/api/job-applicants/:id",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const applicantId = req.params.id;
+      const updateData = req.body;
+
+      // Check if applicant exists
+      const applicant = await jobApplicantsService.getJobApplicantById(applicantId);
+      if (!applicant) {
+        return res.status(404).json({ message: "Job applicant not found" });
+      }
+
+
+      // Ensure the user is authorized to edit
+      if (req.user.email !== applicant.email) {
+        return res.status(403).json({ message: "You are not authorized to edit this application" });
+      }
+
+      // Update the applicant
+      const updatedApplicant = await jobApplicantsService.updateJobApplicant(applicantId, updateData);
+      res.status(200).json(updatedApplicant);
+    } catch (error) {
+      console.error("Error updating job applicant:", error);
+      const err = getErrorMessage(error);
+      return res.status(500).json({ message: err });
+    }
+  }
+);
+
 // Delete a job applicant - requires authentication
 jobApplicantsController.delete(
   "/api/job-applicants/:id",

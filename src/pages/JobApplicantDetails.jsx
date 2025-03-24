@@ -13,7 +13,7 @@ export default function JobApplicantDetails() {
     const [error, setError] = useState(null);
     const [isOwner, setIsOwner] = useState(false);
     const { authData } = useContext(AuthContext);
-    // Public endpoint - no auth required
+
     const [data, pending, fetchError] = useFetch(`/api/job-applicants/${applicantId}`);
 
     // Update with API data when it arrives
@@ -110,7 +110,15 @@ export default function JobApplicantDetails() {
 
 
             {isOwner && (
-                <div className="mt-6">
+                <div className="mt-6 flex flex-col gap-4">
+                    <Link
+                        to={`/edit-applicant/${applicantId}`}
+                        className="w-full px-5 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-200 text-center"
+                        state={{ applicant }}
+                    >
+                        Edit Application
+                    </Link>
+
                     <button
                         onClick={handleDelete}
                         className="w-full px-5 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors duration-200"

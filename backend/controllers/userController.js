@@ -36,7 +36,7 @@ userController.post("/api/users/register", async (req, res) => {
 
     // Create token
     const token = jwt.sign(
-      { id: newUser._id, username: newUser.username },
+      { id: newUser._id, username: newUser.username, email: newUser.email },
       JWT_SECRET,
       { expiresIn: "24h" }
     );
@@ -77,7 +77,7 @@ userController.post("/api/users/login", async (req, res) => {
 
     // Create token
     const token = jwt.sign(
-      { id: user._id, username: user.username },
+      { id: user._id, username: user.username, email: user.email },
       JWT_SECRET,
       { expiresIn: "24h" }
     );

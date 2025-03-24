@@ -25,4 +25,28 @@ export default {
 
     return responseData;
   },
+  async editApplicant(data, token, applicantId) {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    // Add Authorization header if token is provided
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/job-applicants/${applicantId}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(responseData.message || "Failed to submit application");
+    }
+
+    return responseData;
+  }
 };

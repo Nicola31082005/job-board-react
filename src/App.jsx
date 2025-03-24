@@ -9,6 +9,7 @@ import { Home, Jobs, PostJob, JobApplicantDetails, About, Login, Register, Profi
 import { ErrorBoundary } from 'react-error-boundary'
 import usePersistedState from './hooks/usePersistedState'
 import ErrorFallback from './components/common/ErrorFallback'
+import EditApplicant from './pages/EditApplicant'
 
 function App() {
   const [authData, setAuthData] = usePersistedState('auth', {});
@@ -51,9 +52,10 @@ function App() {
               </Route>
 
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/jobs/:id" element={<JobApplicantDetails />} />
-              <Route path="/about" element={<About />} />
+              <Route path="/edit-applicant/:id" element={<EditApplicant />} />
 
             </Routes>
           </main>
