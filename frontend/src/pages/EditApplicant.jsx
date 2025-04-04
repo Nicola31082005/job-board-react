@@ -24,10 +24,6 @@ export default function EditformData() {
 
 
     const handleSubmit = async () => {
-        // Get form Data
-        // ?Validate the formData
-        // Make API request
-        // Redirect to the details applicant page
 
         const newApplicantData = {
             first_name: formData.first_name,
@@ -46,7 +42,7 @@ export default function EditformData() {
 
 
 
-    if (formError) return <p className="text-red-500">{formError}</p>;
+    if (formError) return <p className="text-red-500 mt-15">{formError}</p>;
 
     return (
         <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">

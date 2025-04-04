@@ -150,7 +150,7 @@ jobApplicantsController.put(
 
 
       // Ensure the user is authorized to edit
-      if (req.user.email !== applicant.email) {
+      if (req.user?.email !== applicant.email) {
         return res.status(403).json({ message: "You are not authorized to edit this application" });
       }
 
