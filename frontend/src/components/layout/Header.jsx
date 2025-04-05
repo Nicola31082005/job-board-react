@@ -49,12 +49,7 @@ export default function Header() {
                         >
                             About
                         </Link>
-                        <Link
-                            to="/contact"
-                            className={`${isActivePath('/contact')} hover:text-blue-600 transition-colors duration-200 cursor-pointer`}
-                        >
-                            Contact
-                        </Link>
+
                     </div>
                 </nav>
 
