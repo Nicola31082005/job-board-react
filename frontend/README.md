@@ -18,7 +18,6 @@ A modern, responsive job board application built with React, featuring user auth
 - **Frontend Framework:** React 19
 - **Routing:** React Router 7
 - **Styling:** Tailwind CSS 4
-- **UI Components:** Headless UI, Heroicons
 - **State Management:** React Context API
 - **Testing:** Vitest, React Testing Library
 - **Build Tool:** Vite
